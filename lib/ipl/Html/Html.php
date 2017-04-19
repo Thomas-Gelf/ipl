@@ -123,6 +123,11 @@ class Html implements Renderable
         return implode($this->contentSeparator, $html);
     }
 
+    public static function tag($tag, $attributes = null, $content = null)
+    {
+        return Element::create($tag, $attributes, $content);
+    }
+
     public static function element($name, $attributes = null)
     {
         // TODO: This might be anything here, add a better check

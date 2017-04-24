@@ -15,12 +15,21 @@ class Html implements Renderable
     private $content = array();
 
     /**
-     * @param Renderable $element
+     * @param Renderable|array|string $content
      * @return $this
      */
-    public function add(Renderable $element)
+    public function add($content)
     {
-        $this->content[] = $element;
+        if ($content instanceof Renderable) {
+            $this->content[] = $content;
+        } elseif (is_array($content)) {
+            foreach ($content as $c) {
+                $this->addContent($c);
+            }
+        } else {
+            $this->content[] = Util::wantHtml($content);
+        }
+
         return $this;
     }
 
@@ -52,15 +61,7 @@ class Html implements Renderable
      */
     public function addContent($content)
     {
-        if (is_array($content)) {
-            foreach ($content as $c) {
-                static::addContent($c);
-            }
-        } else {
-            $this->content[] = Util::wantHtml($content);
-        }
-
-        return $this;
+        return $this->add($content);
     }
 
     /**

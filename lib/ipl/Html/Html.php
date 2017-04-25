@@ -45,7 +45,7 @@ class Html implements Renderable
 
     /**
      * @param Renderable|array|string $content
-     * @return $this
+     * @return self
      */
     public function setContent($content)
     {
@@ -99,7 +99,7 @@ class Html implements Renderable
 
     /**
      * @param $separator
-     * @return $this
+     * @return self
      */
     public function setSeparator($separator)
     {

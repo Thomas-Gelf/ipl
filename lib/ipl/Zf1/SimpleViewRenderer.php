@@ -3,11 +3,11 @@
 namespace ipl\Zf1;
 
 use Icinga\Application\Icinga;
-use ipl\Html\Renderable;
+use ipl\Html\ValidHtml;
 use Zend_Controller_Action_Helper_Abstract as Helper;
 use Zend_Controller_Action_HelperBroker as HelperBroker;
 
-class SimpleViewRenderer extends Helper implements Renderable
+class SimpleViewRenderer extends Helper implements ValidHtml
 {
     private $disabled = false;
 

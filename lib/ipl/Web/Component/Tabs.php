@@ -3,8 +3,8 @@
 namespace ipl\Web\Component;
 
 use Icinga\Web\Widget\Tabs as WebTabs;
-use ipl\Html\Renderable;
+use ipl\Html\ValidHtml;
 
-class Tabs extends WebTabs implements Renderable
+class Tabs extends WebTabs implements ValidHtml
 {
 }

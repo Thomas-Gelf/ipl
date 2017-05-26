@@ -15,7 +15,7 @@ class Container extends BaseElement
     }
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @param Attributes|array $attributes
      * @param string $tag
      *

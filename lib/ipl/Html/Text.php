@@ -4,7 +4,7 @@ namespace ipl\Html;
 
 use Exception;
 
-class Text implements Renderable
+class Text implements ValidHtml
 {
     /** @var string */
     protected $string;

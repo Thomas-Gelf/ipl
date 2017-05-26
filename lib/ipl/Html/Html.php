@@ -5,22 +5,22 @@ namespace ipl\Html;
 use Exception;
 use Icinga\Exception\ProgrammingError;
 
-class Html implements Renderable
+class Html implements ValidHtml
 {
     protected $contentSeparator = '';
 
     /**
-     * @var Renderable[]
+     * @var ValidHtml[]
      */
     private $content = array();
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return $this
      */
     public function add($content)
     {
-        if ($content instanceof Renderable) {
+        if ($content instanceof ValidHtml) {
             $this->content[] = $content;
         } elseif (is_array($content)) {
             foreach ($content as $c) {
@@ -48,17 +48,17 @@ class Html implements Renderable
     }
 
     /**
-     * @param Renderable $element
+     * @param ValidHtml $element
      * @return $this
      */
-    public function prepend(Renderable $element)
+    public function prepend(ValidHtml $element)
     {
         array_unshift($this->content, $element);
         return $this;
     }
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return self
      */
     public function setContent($content)
@@ -70,7 +70,7 @@ class Html implements Renderable
     }
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return $this
      */
     public function addContent($content)
@@ -79,7 +79,7 @@ class Html implements Renderable
     }
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return $this
      */
     public function prependContent($content)

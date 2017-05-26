@@ -2,14 +2,14 @@
 
 namespace ipl\Html;
 
-class FormattedString implements Renderable
+class FormattedString implements ValidHtml
 {
     protected $escaped = true;
 
-    /** @var Renderable[] */
+    /** @var ValidHtml[] */
     protected $arguments = [];
 
-    /** @var Renderable */
+    /** @var ValidHtml */
     protected $string;
 
     public function __construct($string, array $arguments = [])

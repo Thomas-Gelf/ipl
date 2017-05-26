@@ -5,7 +5,7 @@ namespace ipl\Web\Component;
 use ipl\Html\Attributes;
 use ipl\Html\BaseElement;
 use ipl\Html\Element;
-use ipl\Html\Renderable;
+use ipl\Html\ValidHtml;
 
 class AbstractList extends BaseElement
 {
@@ -28,7 +28,7 @@ class AbstractList extends BaseElement
     }
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @param Attributes|array $attributes
      *
      * @return $this

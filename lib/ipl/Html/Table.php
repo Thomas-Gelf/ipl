@@ -60,7 +60,7 @@ class Table extends BaseElement
      * Static helper creating a tr element
      *
      * @param Attributes|array $attributes
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return Element
      */
     public static function tr($content = null, $attributes = null)
@@ -72,7 +72,7 @@ class Table extends BaseElement
      * Static helper creating a th element
      *
      * @param Attributes|array $attributes
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return Element
      */
     public static function th($content = null, $attributes = null)
@@ -84,7 +84,7 @@ class Table extends BaseElement
      * Static helper creating a td element
      *
      * @param Attributes|array $attributes
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @return Element
      */
     public static function td($content = null, $attributes = null)

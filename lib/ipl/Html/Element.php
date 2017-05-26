@@ -9,7 +9,7 @@ class Element extends BaseElement
      *
      * @param string $tag
      * @param Attributes|array $attributes
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      */
     public function __construct($tag, $attributes = null, $content = null)
     {
@@ -29,7 +29,7 @@ class Element extends BaseElement
      *
      * @param string $tag
      * @param Attributes|array $attributes
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      *
      * @return static
      */

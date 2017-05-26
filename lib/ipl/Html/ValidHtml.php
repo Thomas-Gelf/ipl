@@ -2,7 +2,7 @@
 
 namespace ipl\Html;
 
-interface Renderable
+interface ValidHtml
 {
     public function render();
 }

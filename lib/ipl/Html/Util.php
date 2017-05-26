@@ -62,12 +62,12 @@ class Util
 
     /**
      * @param $any
-     * @return Renderable
+     * @return ValidHtml
      * @throws IcingaException
      */
     public static function wantHtml($any)
     {
-        if ($any instanceof Renderable) {
+        if ($any instanceof ValidHtml) {
             return $any;
         } elseif (static::canBeRenderedAsString($any)) {
             return new Text($any);

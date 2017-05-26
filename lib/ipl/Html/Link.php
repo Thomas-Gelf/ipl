@@ -17,7 +17,7 @@ class Link extends BaseElement
     }
 
     /**
-     * @param Renderable|array|string $content
+     * @param ValidHtml|array|string $content
      * @param Url|string $url
      * @param array $urlParams
      * @param array $attributes

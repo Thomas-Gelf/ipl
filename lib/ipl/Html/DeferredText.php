@@ -4,7 +4,7 @@ namespace ipl\Html;
 
 use Exception;
 
-class DeferredText implements Renderable
+class DeferredText implements ValidHtml
 {
     /** @var callable */
     protected $callback;

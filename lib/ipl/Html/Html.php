@@ -34,6 +34,20 @@ class Html implements Renderable
     }
 
     /**
+     * @param $string
+     * @return Html
+     */
+    public function addf($string)
+    {
+        $args = func_get_args();
+        array_shift($args);
+
+        return $this->add(
+            new FormattedString($string, $args)
+        );
+    }
+
+    /**
      * @param Renderable $element
      * @return $this
      */

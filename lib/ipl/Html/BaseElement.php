@@ -92,14 +92,27 @@ abstract class BaseElement extends Html
     public function render()
     {
         $tag = $this->getTag();
+        $content = $this->renderContent();
+        if (strlen($content) || $this->forcesClosingTag()) {
+            return sprintf(
+                '<%s%s>%s</%s>',
+                $tag,
+                $this->attributes()->render(),
+                $content,
+                $tag
+            );
+        } else {
+            return sprintf(
+                '<%s%s />',
+                $tag,
+                $this->attributes()->render()
+            );
+        }
+    }
 
-        return sprintf(
-            '<%s%s>%s</%s>',
-            $tag,
-            $this->attributes()->render(),
-            $this->renderContent(),
-            $tag
-        );
+    public function forcesClosingTag()
+    {
+        return false;
     }
 
     /**

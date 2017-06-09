@@ -18,9 +18,11 @@ class Icon extends BaseElement
      */
     public static function create($name, array $attributes = null)
     {
-        $icon = new static();
-        $icon->setAttributes($attributes);
-        $icon->attributes()->add('class', array('icon', 'icon-' . $name));
-        return $icon;
+        return new static($name, $attributes);
+    }
+
+    public function forcesClosingTag()
+    {
+        return true;
     }
 }

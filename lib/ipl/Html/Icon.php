@@ -6,8 +6,10 @@ class Icon extends BaseElement
 {
     protected $tag = 'i';
 
-    protected function __construct()
+    public function __construct($name, $attributes = null)
     {
+        $this->setAttributes($attributes);
+        $this->attributes()->add('class', array('icon', 'icon-' . $name));
     }
 
     /**

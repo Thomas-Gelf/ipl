@@ -27,6 +27,7 @@ class Img extends BaseElement
      */
     public static function create($url, $urlParams = null, array $attributes = null)
     {
+        /** @var Img $img */
         $img = new static();
         $img->setAttributes($attributes);
         $img->attributes()->registerCallbackFor('src', array($img, 'getSrcAttribute'));

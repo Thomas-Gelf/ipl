@@ -9,20 +9,22 @@ trait TranslationHelper
 
     /**
      * @param $string
+     * @param string|null $context
      * @return string
      */
-    public function translate($string)
+    public function translate($string, $context = null)
     {
-        if (self::$translator === null) {
-            static::setNoTranslator();
-        }
+        return self::getTranslator()->translate($string);
+    }
 
-        return self::$translator->translate($string);
+    public static function getTranslator()
+    {
+        return StaticTranslator::get();
     }
 
     public static function setNoTranslator()
     {
-        static::setTranslator(new NoTranslator());
+        StaticTranslator::set(new NoTranslator());
     }
 
     /**
@@ -30,6 +32,6 @@ trait TranslationHelper
      */
     public static function setTranslator(TranslatorInterface $translator)
     {
-        self::$translator = $translator;
+        StaticTranslator::set($translator);
     }
 }

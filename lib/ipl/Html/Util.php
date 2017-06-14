@@ -17,6 +17,9 @@ class Util
      */
     protected static $htmlEscapeFlags;
 
+    /** @var bool */
+    protected static $showTraces = true;
+
     /**
      * Escape the given value top be safely used in view scripts
      *
@@ -54,10 +57,30 @@ class Util
             $msg = 'Got an invalid error'; // TODO: translate?
         }
 
-        return sprintf(
-            'ERROR: %s', // TODO: translate?
+        $output = sprintf(
+            // TODO: translate? Be careful when doing so, it must be failsafe!
+            "<div class=\"exception\">\n<h1><i class=\"icon-bug\">"
+            . "</i>Oops, an error occurred!</h1>\n<pre>%s</pre>\n",
             static::escapeForHtml($msg)
         );
+
+        if (static::showTraces()) {
+            $output .= sprintf(
+                "<pre>%s</pre>\n",
+                static::escapeForHtml($error->getTraceAsString())
+            );
+        }
+        $output .= "</div>\n";
+        return $output;
+    }
+
+    public static function showTraces($show = null)
+    {
+        if ($show !== null) {
+            self::$showTraces = $show;
+        }
+
+        return self::$showTraces;
     }
 
     /**

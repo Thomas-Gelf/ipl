@@ -45,8 +45,8 @@ class Url extends WebUrl
             $self->setPath($parts['path']);
         }
 
-        if (isset($urlParts['query'])) {
-            $params = UrlParams::fromQueryString($urlParts['query'])->mergeValues($params);
+        if (isset($parts['query'])) {
+            $params = UrlParams::fromQueryString($parts['query'])->mergeValues($params);
         }
 
         if (isset($parts['fragment'])) {
@@ -55,6 +55,45 @@ class Url extends WebUrl
 
         $self->setParams($params);
         return $self;
+    }
+
+    /**
+     * Create a new Url class representing the current request
+     *
+     * If $params are given, those will be added to the request's parameters
+     * and overwrite any existing parameters
+     *
+     * @param   UrlParams|array     $params  Parameters that should additionally be considered for the url
+     * @param   \Icinga\Web\Request $request A request to use instead of the default one
+     *
+     * @return  Url
+     */
+    public static function fromRequest($params = array(), $request = null)
+    {
+        if ($request === null) {
+            $request = static::getRequest();
+        }
+
+        $url = new Url();
+        $url->setPath(ltrim($request->getPathInfo(), '/'));
+        $request->getQuery();
+
+        // $urlParams = UrlParams::fromQueryString($request->getQuery());
+        if (isset($_SERVER['QUERY_STRING'])) {
+            $urlParams = UrlParams::fromQueryString($_SERVER['QUERY_STRING']);
+        } else {
+            $urlParams = UrlParams::fromQueryString('');
+            foreach ($request->getQuery() as $k => $v) {
+                $urlParams->set($k, $v);
+            }
+        }
+
+        foreach ($params as $k => $v) {
+            $urlParams->set($k, $v);
+        }
+        $url->setParams($urlParams);
+        $url->setBasePath($request->getBaseUrl());
+        return $url;
     }
 
     public function setBasePath($basePath)

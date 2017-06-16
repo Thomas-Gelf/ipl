@@ -51,17 +51,37 @@ class Controls extends Container
     }
 
     /**
-     * @return ActionBar
+     * @param Tabs $tabs
+     * @return $this
+     */
+    public function setTabs(Tabs $tabs)
+    {
+        $this->tabs = $tabs;
+        return $this;
+    }
+
+    /**
+     * @return Html
      */
     public function getActionBar()
     {
         if ($this->actions === null) {
-            $this->actions = new ActionBar();
+            $this->setActionBar(new ActionBar());
         }
 
-        $this->add($this->actions);
-
         return $this->actions;
+    }
+
+    public function setActionBar(Html $actionBar)
+    {
+        if ($this->actions !== null) {
+            $this->remove($this->actions);
+        }
+
+        $this->actions = $actionBar;
+        $this->add($actionBar);
+
+        return $this;
     }
 
     protected function renderTitleElement()

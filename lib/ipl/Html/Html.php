@@ -9,10 +9,11 @@ class Html implements ValidHtml
 {
     protected $contentSeparator = '';
 
-    /**
-     * @var ValidHtml[]
-     */
-    private $content = array();
+    /** @var ValidHtml[] */
+    private $content = [];
+
+    /** @var array */
+    private $contentIndex = [];
 
     /**
      * @param ValidHtml|array|string $content
@@ -20,24 +21,55 @@ class Html implements ValidHtml
      */
     public function add($content)
     {
-        if ($content instanceof ValidHtml) {
-            $this->content[] = $content;
-        } elseif (is_array($content)) {
+        if (is_array($content)) {
             foreach ($content as $c) {
                 $this->addContent($c);
             }
         } else {
-            $this->content[] = Util::wantHtml($content);
+            $this->addIndexedContent(Util::wantHtml($content));
         }
 
         return $this;
     }
 
     /**
+     * @param $content
+     * @return $this
+     */
+    public function prepend($content)
+    {
+        if (is_array($content)) {
+            foreach (array_reverse($content) as $c) {
+                $this->prepend($c);
+            }
+        } else {
+            $pos = 0;
+            $html = Util::wantHtml($content);
+            array_unshift($this->content, $html);
+            $this->incrementIndexKeys();
+            $this->addObjectPosition($html, $pos);
+        }
+
+        return $this;
+    }
+
+    public function remove(Html $html)
+    {
+        $key = spl_object_hash($html);
+        if (array_key_exists($key, $this->contentIndex)) {
+            foreach ($this->contentIndex[$key] as $pos) {
+                unset($this->content[$pos]);
+            }
+        }
+
+        $this->reIndexContent();
+    }
+
+    /**
      * @param $string
      * @return Html
      */
-    public function addf($string)
+    public function addPrintf($string)
     {
         $args = func_get_args();
         array_shift($args);
@@ -48,17 +80,7 @@ class Html implements ValidHtml
     }
 
     /**
-     * @param ValidHtml $element
-     * @return $this
-     */
-    public function prepend(ValidHtml $element)
-    {
-        array_unshift($this->content, $element);
-        return $this;
-    }
-
-    /**
-     * @param ValidHtml|array|string $content
+     * @param Html|array|string $content
      * @return self
      */
     public function setContent($content)
@@ -70,8 +92,7 @@ class Html implements ValidHtml
     }
 
     /**
-     * @param ValidHtml|array|string $content
-     * @return $this
+     * @see Html::add()
      */
     public function addContent($content)
     {
@@ -79,36 +100,19 @@ class Html implements ValidHtml
     }
 
     /**
-     * @param ValidHtml|array|string $content
-     * @return $this
-     */
-    public function prependContent($content)
-    {
-        array_unshift($this->content, Util::wantHtml($content));
-        return $this;
-    }
-
-    /**
-     * return Html
+     * return ValidHtml[]
      */
     public function getContent()
     {
-        if ($this->content === null) {
-            $this->content = array(new Html());
-        }
-
         return $this->content;
     }
 
+    /**
+     * @return bool
+     */
     public function hasContent()
     {
-        if ($this->content === null) {
-            return false;
-        }
-
-        // TODO: unfinished
-        // return $this->content->isEmpty();
-        return true;
+        return ! empty($this->content);
     }
 
     /**
@@ -138,6 +142,12 @@ class Html implements ValidHtml
         return implode($this->contentSeparator, $html);
     }
 
+    /**
+     * @param $tag
+     * @param null $attributes
+     * @param null $content
+     * @return Element
+     */
     public static function tag($tag, $attributes = null, $content = null)
     {
         return Element::create($tag, $attributes, $content);
@@ -178,6 +188,39 @@ class Html implements ValidHtml
             return $this->render();
         } catch (Exception $e) {
             return $this->renderError($e);
+        }
+    }
+    private function reIndexContent()
+    {
+        $this->contentIndex = [];
+        foreach ($this->content as $pos => $html) {
+            $this->addObjectPosition($html, $pos);
+        }
+    }
+
+    private function addObjectPosition(ValidHtml $html, $pos)
+    {
+        $key = spl_object_hash($html);
+        if (array_key_exists($key, $this->contentIndex)) {
+            $this->contentIndex[$key][] = $pos;
+        } else {
+            $this->contentIndex[$key] = [$pos];
+        }
+    }
+
+    private function addIndexedContent(ValidHtml $html)
+    {
+        $pos = count($this->content);
+        $this->content[$pos] = $html;
+        $this->addObjectPosition($html, $pos);
+    }
+
+    private function incrementIndexKeys()
+    {
+        foreach ($this->contentIndex as & $index) {
+            foreach ($index as & $pos) {
+                $pos++;
+            }
         }
     }
 }

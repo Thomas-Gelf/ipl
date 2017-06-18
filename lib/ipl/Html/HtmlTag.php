@@ -2,6 +2,9 @@
 
 namespace ipl\Html;
 
+/**
+ * @deprecated
+ */
 abstract class HtmlTag
 {
     /**

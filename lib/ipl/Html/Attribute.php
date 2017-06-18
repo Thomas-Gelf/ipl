@@ -2,6 +2,18 @@
 
 namespace ipl\Html;
 
+use Icinga\Exception\ProgrammingError;
+
+/**
+ * HTML Attribute
+ *
+ * Every single HTML attribute is (or should be) an instance of this class.
+ * This guarantees that every attribute is safe and escaped correctly.
+ *
+ * Usually attributes are not instantiated directly, but created through an HTML
+ * element's exposed methods.
+ *
+ */
 class Attribute
 {
     /** @var string */
@@ -18,8 +30,7 @@ class Attribute
      */
     public function __construct($name, $value)
     {
-        $this->name = $name;
-        $this->value = $value;
+        $this->setName($name)->setValue($value);
     }
 
     /**
@@ -30,6 +41,23 @@ class Attribute
     public static function create($name, $value)
     {
         return new static($name, $value);
+    }
+
+    /**
+     * @param $name
+     * @return $this
+     * @throws ProgrammingError
+     */
+    public function setName($name)
+    {
+        if (! preg_match('/^[a-z][a-z-]*$/i', $name)) {
+            throw new ProgrammingError(
+                'Attribute names with special characters are not yet allowed: %s',
+                $name
+            );
+        }
+        $this->name = $name;
+        return $this;
     }
 
     /**
@@ -73,6 +101,7 @@ class Attribute
         } else {
             $this->value[] = $value;
         }
+
         return $this;
     }
 
@@ -109,7 +138,7 @@ class Attribute
      */
     public function isEmpty()
     {
-        return null === $this->value || $this->value === '';
+        return null === $this->value || $this->value === [];
     }
 
     /**

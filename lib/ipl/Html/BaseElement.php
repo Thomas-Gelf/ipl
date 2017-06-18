@@ -86,12 +86,17 @@ abstract class BaseElement extends Html
         return parent::render();
     }
 
+    protected function assemble()
+    {
+    }
+
     /**
      * @return string
      */
     public function render()
     {
         $tag = $this->getTag();
+        $this->assemble();
         $content = $this->renderContent();
         if (strlen($content) || $this->forcesClosingTag()) {
             return sprintf(

@@ -117,6 +117,10 @@ class Attributes
             return $this;
         } elseif ($attribute instanceof Attribute) {
             return $this->setAttribute($attribute);
+        } elseif (is_array($attribute)) {
+            foreach ($attribute as $name => $value) {
+                $this->set($name, $value);
+            }
         } else {
             return $this->setAttribute(new Attribute($attribute, $value));
         }
@@ -132,6 +136,20 @@ class Attributes
             return $this->attributes[$name];
         } else {
             return Attribute::createEmpty($name);
+        }
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function delete($name)
+    {
+        if ($this->has($name)) {
+            unset($this->attributes[$name]);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -198,18 +216,27 @@ class Attributes
         }
 
         $parts = array();
-        foreach ($this->callbacks as $callback) {
+        foreach ($this->callbacks as $name => $callback) {
             $attribute = call_user_func($callback);
-            if (! $attribute instanceof Attribute) {
+            if ($attribute instanceof Attribute) {
+                $parts[] = $attribute->render();
+            } elseif (is_string($attribute)) {
+                $parts[] = Attribute::create($name, $attribute)->render();
+            } elseif (null === $attribute) {
+                continue;
+            } else {
                 throw new ProgrammingError(
-                    'A registered attribute callback must return an Attribute'
+                    'A registered attribute callback must return string, null'
+                    . ' or an Attribute'
                 );
             }
-
-            $parts[] = $attribute->render();
         }
 
         foreach ($this->attributes as $attribute) {
+            if ($attribute->isEmpty()) {
+                continue;
+            }
+
             $parts[] = $attribute->render();
         }
         return ' ' . implode(' ', $parts);

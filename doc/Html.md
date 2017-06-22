@@ -10,7 +10,7 @@ Getting started
 ```php
 use ipl\Html;
 
-echo Html::element('h1', 'Hello there!');
+echo Html::h1('Hello there!');
 ```
 This gives:
 

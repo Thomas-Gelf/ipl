@@ -4,6 +4,7 @@ namespace ipl\Web\Table;
 
 use Icinga\Data\Db\DbConnection;
 use Icinga\Data\Filter\Filter;
+use Icinga\Exception\ProgrammingError;
 use ipl\Db\Zf1\FilterRenderer;
 use ipl\Db\Zf1\SelectPaginationAdapter;
 use ipl\Html\Container;
@@ -16,6 +17,7 @@ use ipl\Web\Component\ControlsAndContent;
 use ipl\Web\Component\Paginator;
 use ipl\Web\Table\Extension\QuickSearch;
 use ipl\Web\Url;
+use Zend_Db_Adapter_Abstract as DbAdapter;
 
 abstract class ZfQueryBasedTable extends Table
 {
@@ -30,17 +32,26 @@ abstract class ZfQueryBasedTable extends Table
     /** @var DbConnection */
     private $connection;
 
-    /** @var \Zend_Db_Adapter_Abstract */
+    /** @var DbAdapter */
     private $db;
 
     private $query;
 
     protected $searchColumns = [];
 
-    public function __construct(DbConnection $connection)
+    public function __construct($db)
     {
-        $this->connection = $connection;
-        $this->db = $connection->getDbAdapter();
+        if ($db instanceof DbAdapter) {
+            $this->db = $db;
+        } elseif ($db instanceof DbConnection) {
+            $this->connection = $db;
+            $this->db = $db->getDbAdapter();
+        } else {
+            throw new ProgrammingError(
+                'Unable to deal with %s db class',
+                get_class($db)
+            );
+        }
     }
 
     public function getCountQuery()
